@@ -1,6 +1,6 @@
-# EE Coursework: Power Electronics & Electric Drives (MATLAB/Simulink)
+# EE Coursework: Power Electronics, Electric Drives & Power Systems (MATLAB/Simulink)
 
-Simulink models and output waveforms for common power electronics and electric drive topics: DC motor drives (rectifier and chopper fed), induction motor drives (VSI with SPWM, vector control) and synchronous / PMSM / BLDC drives.
+Simulink models, MATLAB scripts and output plots for power electronics, electric drives and power systems: DC/induction/PMSM/BLDC drives, load flow, fault analysis, transient stability, load frequency control and relay characteristics.
 
 Made by **Harish M** ([@harishkernel](https://github.com/harishkernel)), B.E. Electrical and Electronics Engineering, Easwari Engineering College, Chennai.
 
@@ -14,6 +14,31 @@ Made by **Harish M** ([@harishkernel](https://github.com/harishkernel)), B.E. El
 3. Open the `.slx` (or `.mdl`) file and press **Run**.
 4. Double-click the scopes to see speed, torque, current and voltage. Each folder's `output.pdf` shows the expected result.
 
+## Required helper functions (Power Systems)
+Two Power Systems scripts call functions that are not part of the scripts themselves. They are included in `Power_Systems/Helper_Functions/` and come from the MATLAB files that accompany Hadi Saadat's *Power System Analysis*. All credit for these functions goes to the author.
+
+| Script | Helper functions it calls |
+|---|---|
+| `Power_Systems/Fault_analysis_LL_LG_LLG/Fault_analysis.m` | `zbuild`, `symfault`, `lgfault`, `llfault`, `dlgfault` |
+| `Power_Systems/Newton_Raphson_Load_Flow_Analysis/Load_flow_analysis.m` | `lfybus`, `lfnewton`, `busout`, `lineflow` |
+
+The other Power Systems scripts run on their own.
+
+**Add the helper folder to the MATLAB path before running those two scripts:**
+
+```matlab
+% 1. Set MATLAB's current folder to the repo root (EE_Coursework)
+% 2. Add the helper functions (and subfolders) to the path
+addpath(genpath('Power_Systems/Helper_Functions'));
+
+% 3. Move into the topic folder and run the script
+cd Power_Systems/Fault_analysis_LL_LG_LLG
+Fault_analysis
+```
+
+`addpath` lasts only for the current MATLAB session. To keep it permanently, use **Home > Set Path > Add with Subfolders**, select `Helper_Functions`, then **Save**. If MATLAB reports `Undefined function 'zbuild'` (or `lfybus` etc.), the helper folder is not on the path.
+
+Several scripts also ask for inputs at the prompt (`input(...)`); enter values when asked.
 
 ## Contents
 
@@ -21,6 +46,21 @@ Made by **Harish M** ([@harishkernel](https://github.com/harishkernel)), B.E. El
 | Topic | Folder |
 |---|---|
 | Single-phase fully controlled rectifier circuit | [Open](Power_Electronics/Single_phase_full_controlled_rectifier_circuit) |
+
+### Power Systems
+| Topic | Folder |
+|---|---|
+| Y-bus calculation | [Open](Power_Systems/Ybus_calculation) |
+| Z-bus calculation (building algorithm) | [Open](Power_Systems/Zbus_calculation) |
+| Gauss-Seidel load flow analysis | [Open](Power_Systems/Gauss_Seidel_Load_Flow_Analysis) |
+| Newton-Raphson load flow analysis | [Open](Power_Systems/Newton_Raphson_Load_Flow_Analysis) |
+| Fault analysis: LG, LL and LLG faults | [Open](Power_Systems/Fault_analysis_LL_LG_LLG) |
+| Transient stability of SMIB system: equal area criterion and critical clearing angle | [Open](Power_Systems/Transient_stability_SMIB_equal_area_criterion) |
+| Two-area load frequency control (Simulink) | [Open](Power_Systems/Two_area_LFC) |
+| Tie-line power and frequency deviation (Simulink) | [Open](Power_Systems/Tie_line_power) |
+| Inverse definite minimum time (IDMT) overcurrent relay characteristics | [Open](Power_Systems/Inverse_Definite_Min_Time_Relay) |
+| Transmission line parameters: inductance and capacitance with ACSR conductors | [Open](Power_Systems/Modelling_of_Transmission_line_parameters) |
+| CT and PT testing (ratio and percent error) | [Open](Power_Systems/Transformer_CT_PT_Testing) |
 
 ### Electric Drives: DC motor
 | Topic | Folder |
@@ -88,5 +128,15 @@ Made by **Harish M** ([@harishkernel](https://github.com/harishkernel)), B.E. El
 - **Circuit:** universal bridge on a DC source driving a permanent magnet synchronous machine.
 - **Control:** rotor position (theta) converted to Hall signals, which are decoded into six switching signals.
 
-## Feedback and reuse 
-Found a bug or want to suggest an improvement? Open an issue. You're welcome to reuse the models for learning.
+## Power Systems details
+- **Y-bus / Z-bus:** builds the bus admittance matrix from line impedance and line charging data, and the bus impedance matrix with the building algorithm.
+- **Load flow:** Gauss-Seidel and Newton-Raphson solutions on small test systems, with bus voltages and line flows.
+- **Fault analysis:** line-to-ground, line-to-line and double line-to-ground faults using sequence networks.
+- **Transient stability:** critical clearing angle of a single-machine infinite-bus system using the equal area criterion.
+- **Load frequency control:** two-area system and tie-line power flow in Simulink, with frequency deviation plots.
+- **IDMT relay:** operating time against fault current for a standard inverse overcurrent relay.
+- **Transmission lines:** inductance and capacitance per km for three-phase lines with bundled ACSR conductors.
+- **Instrument transformers:** CT and PT ratio error calculations from test data.
+
+## Feedback and reuse
+Found a bug or want to suggest an improvement? Open an issue. You're welcome to reuse the models for learning; see the LICENSE file for terms.
